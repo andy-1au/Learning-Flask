@@ -3,7 +3,7 @@ app = Flask(__name__)
 
 @app.route("/") # root page of the website
 def hello(): 
-    return "Hello World!"
+    return "<h1>Hello World!</h1>"
 
 @app.route("/home") # test home page
 def home(): 
