@@ -7,4 +7,10 @@ def hello():
 
 @app.route("/home") # test home page
 def home(): 
-    return "This is a home page!"
+    return "<h1>This is a home page!</h1>"
+
+
+
+
+if __name__ == '__main__':
+    app.run(debug=True) # run via python [app.py]
