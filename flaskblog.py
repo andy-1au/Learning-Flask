@@ -1,7 +1,8 @@
 from flask import Flask
 app = Flask(__name__)
 
-@app.route("/") # test home page
+@app.route("/") # default
+@app.route("/home") # also home, two routes are handled by the same function below
 def home(): 
     return "<h1>This is a home page!</h1>"
 
