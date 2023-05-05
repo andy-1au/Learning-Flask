@@ -17,6 +17,7 @@ class User(db.Model):
     posts = db.relationship('Post', backref='author', lazy=True) 
     # posts attrib has a relationship to the Post class/model, 
     # backref is like adding another column to the Post model, use 'author' attrib to get the user's info, who created the post
+    
     # lazy=True loads all data in one go, so that we can get all of the posts by one user
     
     # Function for printing out the user object
