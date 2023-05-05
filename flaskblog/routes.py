@@ -1,14 +1,7 @@
-from datetime import datetime
 from flask import Flask, render_template, url_for, flash, redirect
-from flask_sqlalchemy import SQLAlchemy
-from forms import RegistrationForm, LoginForm
-from models import MyUser, Post
-
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'c30cdec540796525fe21a63113d6b863' # Protect against attacks, modifying cookies, cross-site attacks
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db' # /// is a relative path to the project directory 
-db = SQLAlchemy(app) # create sqlalchemy database instance, classes/models are the database structures for SQLAlchemy
-
+from flaskblog import app
+from flaskblog.forms import RegistrationForm, LoginForm
+from flaskblog.models import MyUser, Post
 
 posts = [
     {
@@ -55,9 +48,3 @@ def login():
         else:
             flash('Login Unsuccessful. Please check username and password', 'danger')
     return render_template('login.html', title='Login', form=form)
-
-
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-        app.run(debug=True) # run via python [app.py]

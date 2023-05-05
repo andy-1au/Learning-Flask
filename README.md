@@ -18,6 +18,13 @@ db.create_all()
 ```
 
 ## Add data to db
+>>> from flaskblog import db, app
+>>> from flaskblog.models import MyUser, Post
+>>> with app.app_context(): 
+...     db.create_all()
+...     MyUser.query.all()
+
+
 ```
 from [project_name] import [tables] [tables]
 ```
