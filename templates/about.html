@@ -1,16 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% if title %}
-        <title>Flask Blog - {{ title }}</title>
-    {% else %}
-        <title>Flask Blog</title>
-    {% endif %}
-</head>
-<body>
+{% extends "layout.html" %}
+{% block content %}
     <h1>About Page</h1>
-</body>
-</html>
+{% endblock content %} <!-- content here isn't needed but, nice to have to keep track of which block is being ended  -->
