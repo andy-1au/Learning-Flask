@@ -7,7 +7,6 @@ Just a repository for me to learn the Python Framework, Flask
 * flask run --- run the app
 * [NOTE] Environment variable may have to be set again if terminal is closed and re-opened
 
-
 ## Some Things to Remember for FLASK
 * {{}} is used when passing in variables
 * {} is used for loops, and logical statements
@@ -17,3 +16,15 @@ from [project_name] import app, db
 app.app_context().push()
 db.create_all()
 ```
+
+## Add data to db
+* Create an instance of a table object
+* db.session.add(the_object)
+* db.session.commit()
+
+## Querying data from db
+* [table_name].query...
+* .first()
+* .filter_by()
+* .all()
+* .get([by id])
