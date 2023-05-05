@@ -18,6 +18,9 @@ db.create_all()
 ```
 
 ## Add data to db
+```
+from [project_name] import [tables] [tables]
+```
 * Create an instance of a table object
 * db.session.add(the_object)
 * db.session.commit()
