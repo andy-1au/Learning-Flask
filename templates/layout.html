@@ -42,6 +42,7 @@
     <main role="main" class="container"> <!--container is a bootstrap class-->
         <div class="row">
           <div class="col-md-8">
+            <!-- flash message section -->
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
@@ -51,6 +52,7 @@
                     {% endfor %}
                 {% endif %}
             {% endwith %}
+            <!-- flash message section -->
             {% block content %}{% endblock %}
           </div>
           <div class="col-md-4">

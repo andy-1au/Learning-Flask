@@ -32,9 +32,10 @@ def about():
 @app.route("/register", methods=['GET', 'POST'])
 def register(): 
     form = RegistrationForm() # create an instance of the class
-    if form.validate_on_submit():
+    if form.validate_on_submit(): # if .validate_on_submit() returns true, call the flash() message function 
+        # flash message is a one time thing, so if the page is refreshed, then it will disappear
         flash(f'Account created for {form.username.data}!', 'success') # success is a bootstrap class to style this alert
-        return redirect(url_for('home'))
+        return redirect(url_for('home')) # redirect to the home url 
     return render_template('register.html', title='Register', form=form)
 
 @app.route("/login")
