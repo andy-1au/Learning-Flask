@@ -1,4 +1,9 @@
 from flask import Flask, render_template, url_for
+from forms import RegistrationForm, LoginForm
+
+app = Flask(__name__)
+
+app.config['SECRET_KEY'] = 'c30cdec540796525fe21a63113d6b863' # Protect against attacks, modifying cookies, cross-site attacks
 
 posts = [
     {
@@ -15,9 +20,6 @@ posts = [
     }
 ]
 
-
-app = Flask(__name__)
-
 @app.route('/') # default
 @app.route('/home') # also home, two routes are handled by the same function below
 def home(): 
@@ -26,6 +28,16 @@ def home():
 @app.route("/about")
 def about():
     return render_template('about.html', title='About')
+
+@app.route("/register")
+def register(): 
+    form = RegistrationForm() # create an instance of the class
+    return render_template('register.html', title='Register', form=form)
+
+@app.route("/login")
+def login(): 
+    form = LoginForm() # create an instance of the class
+    return render_template('login.html', title='Login', form=form)
 
 
 if __name__ == '__main__':
