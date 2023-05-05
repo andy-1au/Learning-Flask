@@ -83,4 +83,7 @@ def login():
 
 
 if __name__ == '__main__':
-    app.run(debug=True) # run via python [app.py]
+    # for creating the .db file
+    with app.app_context():
+        db.create_all()
+        app.run(debug=True) # run via python [app.py]
