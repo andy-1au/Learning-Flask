@@ -1,14 +1,39 @@
+import os
+
 from datetime import datetime
 from flask import Flask, render_template, url_for, flash, redirect
 from flask_sqlalchemy import SQLAlchemy
 from forms import RegistrationForm, LoginForm
+from sqlalchemy import create_engine
+
+database_uri = 'postgresql+psycopg2://{dbuser}:{dbpass}@{dbhost}/{dbname}'.format(
+    dbuser=os.environ['DBUSER'],
+    dbpass=os.environ['DBPASS'],
+    dbhost=os.environ['DBHOST'],
+    dbname=os.environ['DBNAME']
+)
+
+try:
+    engine = create_engine(database_uri)
+    conn = engine.connect()
+    conn.close()
+    print('Connected to the database')
+except Exception as e:
+    print('Failed to connect to the database:', str(e))
 
 app = Flask(__name__)
+
+app.config.update(
+    SQLALCHEMY_DATABASE_URI=database_uri,
+    SQLALCHEMY_TRACK_MODIFICATIONS=False,
+)
+
 app.config['SECRET_KEY'] = 'c30cdec540796525fe21a63113d6b863' # Protect against attacks, modifying cookies, cross-site attacks
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db' # /// is a relative path to the project directory 
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db' # /// is a relative path to the project directory 
+
 db = SQLAlchemy(app) # create sqlalchemy database instance, classes/models are the database structures for SQLAlchemy
 
-class User(db.Model):
+class MyUser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username=db.Column(db.String(20), unique=True, nullable=False) # max 20 chars, must be unique, and can't be empty (null)
     email=db.Column(db.String(120), unique=True, nullable=False) 
@@ -17,24 +42,22 @@ class User(db.Model):
     posts = db.relationship('Post', backref='author', lazy=True) 
     # posts attrib has a relationship to the Post class/model, 
     # backref is like adding another column to the Post model, use 'author' attrib to get the user's info, who created the post
-    
     # lazy=True loads all data in one go, so that we can get all of the posts by one user
-    
     # Function for printing out the user object
     def __repr__(self): 
-        return f"User('{self.username}', '{self.email}', '{self.image_file}')"
+        return f"MyUser('{self.username}', '{self.email}', '{self.image_file}')"
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow) # no () for datetime.utcnow bc we want to pass in the func as the arg and not the current time
     content = db.Column(db.Text, nullable=False)
-    user_id =  db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) 
+    user_id =  db.Column(db.Integer, db.ForeignKey('my_user.id'), nullable=False) 
     # this is directly linked the user id in user table
     # user.id is lowercase because it's a direct reference to the user table/column which is default lc
     
     def __repr__(self): 
-        return f"User('{self.title}', '{self.date_posted}')" # don't need to post content, could be super long, just want a short description when printing these objects
+        return f"MyUser('{self.title}', '{self.date_posted}')" # don't need to post content, could be super long, just want a short description when printing these objects
 
 posts = [
     {
@@ -84,7 +107,6 @@ def login():
 
 
 if __name__ == '__main__':
-    # for creating the .db file
     with app.app_context():
         db.create_all()
         app.run(debug=True) # run via python [app.py]
