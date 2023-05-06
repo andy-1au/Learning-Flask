@@ -6,3 +6,4 @@ psycopg2-binary
 email_validator
 SQLAlchemy
 flask-bcrypt
+flask_login
