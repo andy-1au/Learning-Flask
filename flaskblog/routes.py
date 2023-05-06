@@ -8,24 +8,11 @@ from flaskblog.forms import RegistrationForm, LoginForm, UpdateAccountForm, Post
 from flaskblog.models import MyUser, Post
 from flask_login import login_user, current_user, logout_user, login_required
 
-posts = [
-    {
-        'author': 'Andy Lau',
-        'title': 'Blog Post 1',
-        'content': 'This is my first blog post.',
-        'date_posted': 'May 04, 2023',
-    },
-    {
-        'author': 'Dennis Lam',
-        'title': 'Blog Post 2',
-        'content': 'Hi, my name is Dennis Lam.',
-        'date_posted': 'May 04, 2023',
-    }
-]
 
 @app.route('/') # default
 @app.route('/home') # also home, two routes are handled by the same function below
 def home(): 
+    posts = Post.query.all() # Query all posts from db
     return render_template('home.html', posts=posts)
 
 @app.route("/about")
@@ -116,6 +103,11 @@ def account():
 def new_post():
     form = PostForm()
     if form.validate_on_submit():
+        # author is a backref in the Post model, backref is a simple way to declare a new property on the Post model, and it also adds a new column to the Post table in the db
+        # current_user is the user that is logged in
+        post = Post(title=form.title.data, content=form.content.data, author=current_user) 
+        db.session.add(post)
+        db.session.commit()
         flash('Your post has been created!', 'success')
         return redirect(url_for('home'))
     return render_template('create_post.html', title='New Post', form=form)
