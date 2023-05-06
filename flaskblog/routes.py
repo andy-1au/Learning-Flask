@@ -1,3 +1,6 @@
+import secrets
+import os 
+
 from flask import Flask, render_template, url_for, flash, redirect, request
 from flaskblog import app, db, bcrypt
 from flaskblog.forms import RegistrationForm, LoginForm, UpdateAccountForm
@@ -73,18 +76,30 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
+def save_picture(form_picture):
+    random_hex = secrets.token_hex(8) # creating a random hex for the name of the picture file
+    _, f_ext = os.path.splitext(form_picture.filename) # split the file name and the extension
+    picture_fn = random_hex + f_ext # concatenate the random hex and the extension
+    picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn) 
+    form_picture.save(picture_path)
+    
+    return picture_fn
+
 @app.route("/account", methods=['GET', 'POST'])
 @login_required
 def account():
     form = UpdateAccountForm()
     if form.validate_on_submit(): # if valid on submission, update the current user's data
+            if form.picture.data:
+                picture_file = save_picture(form.picture.data) # calls the save_picture() above, save the picture to the static folder
+                current_user.image_file = picture_file # set the current user's image file to the picture file
             current_user.username = form.username.data
             current_user.email = form.email.data
             db.session.commit()
             flash('Your account has been updated!', 'success')
-            # post get redirect pattern
+            # post get redirect pattern --- refresh the page using 'GET'
             return redirect(url_for('account')) # causes the browser to send a GET request instead of POST request, ignores the 'are you sure' 
-    elif request.method == 'GET': # fill in user's info on page load
+    elif request.method == 'GET': # fill in user's info on page load in the forms
         form.username.data = current_user.username
         form.email.data = current_user.email
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file) # set the image file to the current user's image file
