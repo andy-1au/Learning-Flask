@@ -27,6 +27,7 @@ def register():
         return redirect(url_for('home'))
 
     form = RegistrationForm() # create an instance of the class
+    # validate_on_submit() is linked to form.submit() in the html file
     if form.validate_on_submit(): # if everything in the form is correct
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8') # hash the password in the form on validate, and decode it to a string
         user = MyUser(username=form.username.data, email=form.email.data, password=hashed_password) # generate new user using the info passed into form
@@ -46,6 +47,7 @@ def login():
         return redirect(url_for('home'))
     
     form = LoginForm() # create an instance of the class
+    # validate_on_submit() is linked to form.submit() in the html file
     if form.validate_on_submit(): # same thing here
         user = MyUser.query.filter_by(email=form.email.data).first()
         # if the user exist and the password entered is the same as the hashed password in the db
@@ -82,6 +84,7 @@ def save_picture(form_picture):
 @login_required
 def account():
     form = UpdateAccountForm()
+    # validate_on_submit() is linked to form.submit() in the html file
     if form.validate_on_submit(): # if valid on submission, update the current user's data
             if form.picture.data:
                 picture_file = save_picture(form.picture.data) # calls the save_picture() above, save the picture to the static folder
@@ -103,6 +106,7 @@ def account():
 @login_required
 def new_post():
     form = PostForm()
+    # validate_on_submit() is linked to form.submit() in the html file
     if form.validate_on_submit():
         # author is a backref in the Post model, gives us access to the entire user and it's attributes
         post = Post(title=form.title.data, content=form.content.data, author=current_user) 
@@ -126,7 +130,8 @@ def update_post(post_id):
     if post.author != current_user: 
         abort(403) # 403 is a HTTP response for a forbidden route
     form = PostForm() 
-    if form.validate_on_submit():
+    # validate_on_submit() is linked to form.submit() in the html file
+    if form.validate_on_submit(): 
         post.title = form.title.data
         post.content = form.content.data
         post.date_posted = datetime.utcnow() # update the date posted to the current time so posts are can be sorted by most recent
@@ -139,3 +144,16 @@ def update_post(post_id):
         form.content.data = post.content
     return render_template('create_post.html', title='Update Post', 
                            form=form, legend="Update Post")
+    
+@app.route("/post/<int:post_id>/delete", methods=['POST']) # only allow post requests because we don't want users to be able to go to the url and delete posts
+@login_required
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id) # if the post doesn't exist, return 404, otherwise return the post
+    # first check if the author of the post is the current_user
+    if post.author != current_user: 
+        abort(403) # 403 is a HTTP response for a forbidden route
+    db.session.delete(post)
+    db.session.commit()
+    flash('Your post has been deleted!', 'success')
+    return redirect(url_for('home')) # redirect to the home page
+
