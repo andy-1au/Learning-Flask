@@ -1,6 +1,6 @@
 from flask import Flask, render_template, url_for, flash, redirect, request
 from flaskblog import app, db, bcrypt
-from flaskblog.forms import RegistrationForm, LoginForm
+from flaskblog.forms import RegistrationForm, LoginForm, UpdateAccountForm
 from flaskblog.models import MyUser, Post
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -73,7 +73,20 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@app.route("/account")
+@app.route("/account", methods=['GET', 'POST'])
 @login_required
 def account():
-    return render_template('account.html', title='Account')
+    form = UpdateAccountForm()
+    if form.validate_on_submit(): # if valid on submission, update the current user's data
+            current_user.username = form.username.data
+            current_user.email = form.email.data
+            db.session.commit()
+            flash('Your account has been updated!', 'success')
+            # post get redirect pattern
+            return redirect(url_for('account')) # causes the browser to send a GET request instead of POST request, ignores the 'are you sure' 
+    elif request.method == 'GET': # fill in user's info on page load
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+    image_file = url_for('static', filename='profile_pics/' + current_user.image_file) # set the image file to the current user's image file
+    return render_template('account.html', title='Account', 
+                           image_file=image_file, form=form)
