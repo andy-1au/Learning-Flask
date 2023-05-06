@@ -11,5 +11,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db' # /// is a relative 
 db = SQLAlchemy(app) # create sqlalchemy database instance, classes/models are the database structures for SQLAlchemy
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
+login_manager.login_view = 'login' # set the login route to tell @login_required where the login route is located
 
 from flaskblog import routes
