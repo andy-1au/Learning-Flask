@@ -2,7 +2,7 @@ from flask import Flask, render_template, url_for, flash, redirect
 from flaskblog import app, db, bcrypt
 from flaskblog.forms import RegistrationForm, LoginForm
 from flaskblog.models import MyUser, Post
-from flask_login import login_user
+from flask_login import login_user, current_user
 
 posts = [
     {
@@ -30,6 +30,10 @@ def about():
 
 @app.route("/register", methods=['GET', 'POST'])
 def register(): 
+    # gets redirected to homepage is user is logged in
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
     form = RegistrationForm() # create an instance of the class
     if form.validate_on_submit(): # if everything in the form is correct
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8') # hash the password in the form on validate, and decode it to a string
@@ -45,6 +49,10 @@ def register():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login(): 
+    # gets redirected to homepage is user is logged in
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    
     form = LoginForm() # create an instance of the class
     if form.validate_on_submit(): # same thing here
         user = MyUser.query.filter_by(email=form.email.data).first()
