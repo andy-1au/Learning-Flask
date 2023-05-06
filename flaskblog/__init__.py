@@ -12,5 +12,6 @@ db = SQLAlchemy(app) # create sqlalchemy database instance, classes/models are t
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login' # set the login route to tell @login_required where the login route is located
+login_manager.login_message_category = 'info' # info is a bootstrap alert
 
 from flaskblog import routes
