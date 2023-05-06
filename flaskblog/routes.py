@@ -1,7 +1,8 @@
 from flask import Flask, render_template, url_for, flash, redirect
-from flaskblog import app
+from flaskblog import app, db, bcrypt
 from flaskblog.forms import RegistrationForm, LoginForm
 from flaskblog.models import MyUser, Post
+
 
 posts = [
     {
@@ -30,11 +31,16 @@ def about():
 @app.route("/register", methods=['GET', 'POST'])
 def register(): 
     form = RegistrationForm() # create an instance of the class
-    if form.validate_on_submit(): # if .validate_on_submit() returns true, call the flash() message function 
+    if form.validate_on_submit(): # if everything in the form is correct
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8') # hash the password in the form on validate, and decode it to a string
+        user = MyUser(username=form.username.data, email=form.email.data, password=hashed_password) # generate new user using the info passed into form
+        db.session.add(user)
+        db.session.commit()
+
         # flash message is a one time thing, so if the page is refreshed, then it will disappear
-        flash(f'Account created for {form.username.data}!', 'success') # success is a bootstrap class to style this alert
+        flash(f'Your account has been created! You are now able to log in.', 'success') # success is a bootstrap class to style this alert
         # .data is the just data submitted in the username section of the form
-        return redirect(url_for('home')) # redirect to the home url 
+        return redirect(url_for('login')) # redirect to the home url 
     return render_template('register.html', title='Register', form=form)
 
 @app.route("/login", methods=['GET', 'POST'])
