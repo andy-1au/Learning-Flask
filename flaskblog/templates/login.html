@@ -38,10 +38,10 @@
             </fieldset>
             <div class="form-group"> <!--submit button-->
                 {{ form.submit(class="btn btn-outline-info") }}
+                <small class="text-muted ml-2">
+                    <a href="{{ url_for('reset_request') }}">Forgot Password?</a> <!--# is dummy link-->
+                </small>
             </div>
-            <small class="text-muted ml-2">
-                <a href="#">Forgot Password?</a> <!--# is dummy link-->
-            </small>
         </form>
     </div>
     <div class="border-top pt-3"> <!--Sign In Label at the bottom of the page-->

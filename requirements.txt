@@ -9,3 +9,5 @@ flask-bcrypt
 flask_login
 psycopg2
 Pillow
+flask-mail
+itsdangerous==1.1.0
