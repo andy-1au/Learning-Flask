@@ -70,3 +70,7 @@ def logout():
     # don't need to pass in the user, and clears remember me cookie if it was selected
     logout_user()
     return redirect(url_for('home'))
+
+@app.route("/account")
+def account():
+    return render_template('account.html', title='Account')
