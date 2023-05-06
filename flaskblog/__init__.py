@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from flask_login import LoginManager
 
 from datetime import datetime
 
@@ -9,5 +10,6 @@ app.config['SECRET_KEY'] = 'c30cdec540796525fe21a63113d6b863' # Protect against 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db' # /// is a relative path to the project directory 
 db = SQLAlchemy(app) # create sqlalchemy database instance, classes/models are the database structures for SQLAlchemy
 bcrypt = Bcrypt(app)
+login_manager = LoginManager(app)
 
 from flaskblog import routes
