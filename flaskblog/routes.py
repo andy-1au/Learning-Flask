@@ -2,7 +2,7 @@ import secrets
 import os 
 
 from PIL import Image
-from flask import Flask, render_template, url_for, flash, redirect, request
+from flask import Flask, render_template, url_for, flash, redirect, request, abort
 from flaskblog import app, db, bcrypt
 from flaskblog.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm
 from flaskblog.models import MyUser, Post
@@ -103,11 +103,16 @@ def account():
 def new_post():
     form = PostForm()
     if form.validate_on_submit():
-        # author is a backref in the Post model, backref is a simple way to declare a new property on the Post model, and it also adds a new column to the Post table in the db
-        # current_user is the user that is logged in
+        # author is a backref in the Post model, gives us access to the entire user and it's attributes
         post = Post(title=form.title.data, content=form.content.data, author=current_user) 
         db.session.add(post)
         db.session.commit()
         flash('Your post has been created!', 'success')
         return redirect(url_for('home'))
     return render_template('create_post.html', title='New Post', form=form)
+
+@app.route("/post/<int:post_id>")
+def post(post_id):
+    post = Post.query.get_or_404(post_id) # if the post doesn't exist, return 404, otherwise return the post
+    return render_template('post.html', title=post.title, post=post)
+
