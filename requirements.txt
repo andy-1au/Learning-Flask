@@ -8,3 +8,4 @@ SQLAlchemy
 flask-bcrypt
 flask_login
 psycopg2
+Pillow
