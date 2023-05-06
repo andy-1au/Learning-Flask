@@ -1,6 +1,6 @@
 from datetime import datetime
-
-from flaskblog import db, login_manager
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from flaskblog import db, login_manager, app
 from flask_login import UserMixin
 
 @login_manager.user_loader
@@ -19,6 +19,20 @@ class MyUser(db.Model, UserMixin):
     # backref is like adding another column to the Post model, use 'author' attrib to get the user's info, who created the post
     # lazy=True loads all data in one go, so that we can get all of the posts by one user
     # Function for printing out the user object
+
+    def get_reset_token(self, expires_sec=1800):
+        s = Serializer(app.config['SECRET_KEY'], expires_sec) # create a serializer object
+        return s.dump({'user_id': self.id}).decode('utf-8') # return a token that expires in 30 mins, and the user id
+    
+    @staticmethod # don't expect self as an argument
+    def verify_reset_token(token):
+        s = Serializer(app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token)['user_id'] # get the user id from the token
+        except:
+            return None # if the token is invalid, return None
+        return MyUser.query.get(user_id) # if the token is valid, return the user object with the user id
+
     def __repr__(self): 
         return f"MyUser('{self.username}', '{self.email}', '{self.image_file}')"
 
