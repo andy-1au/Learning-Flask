@@ -1,3 +1,4 @@
+from datetime import datetime
 import secrets
 import os 
 
@@ -12,7 +13,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 @app.route('/') # default
 @app.route('/home') # also home, two routes are handled by the same function below
 def home(): 
-    posts = Post.query.all() # Query all posts from db
+    posts = Post.query.order_by(Post.date_posted.desc()).all() # Query all posts from db in descending order by date_posted
     return render_template('home.html', posts=posts)
 
 @app.route("/about")
@@ -109,10 +110,32 @@ def new_post():
         db.session.commit()
         flash('Your post has been created!', 'success')
         return redirect(url_for('home'))
-    return render_template('create_post.html', title='New Post', form=form)
+    return render_template('create_post.html', title='New Post',
+                           form=form, legend="New Post")
 
 @app.route("/post/<int:post_id>")
 def post(post_id):
     post = Post.query.get_or_404(post_id) # if the post doesn't exist, return 404, otherwise return the post
     return render_template('post.html', title=post.title, post=post)
 
+@app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_post(post_id):
+    post = Post.query.get_or_404(post_id) # if the post doesn't exist, return 404, otherwise return the post
+    # first check if the author of the post is the current_user
+    if post.author != current_user: 
+        abort(403) # 403 is a HTTP response for a forbidden route
+    form = PostForm() 
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.content = form.content.data
+        post.date_posted = datetime.utcnow() # update the date posted to the current time so posts are can be sorted by most recent
+        db.session.commit() # no need to add since it's already in the db, just updating
+        flash('Your post has been updated!', 'success')
+        return redirect(url_for('post', post_id=post.id)) # redirect to the post page
+    elif request.method == 'GET':
+        # fill in form with the current post data
+        form.title.data = post.title 
+        form.content.data = post.content
+    return render_template('create_post.html', title='Update Post', 
+                           form=form, legend="Update Post")
