@@ -1,6 +1,10 @@
 # Learning-Flask
 Just a repository for me to learn the Python Framework, Flask
 
+## I am following the Corey Schafer Tutorial
+[His Channel](https://www.youtube.com/@coreyms)
+[The Playlist I'm Following](https://www.youtube.com/watch?v=MwZwr5Tvyxo&list=PL-osiE80TeTs4UjLw5MM6OjgkjFeUxCYH&index=1&ab_channel=CoreySchafer)
+
 ## Environment Setup and Running through ENVs
 * EXPORT FLASK_APP=[name of file]
 * EXPORT FLASK_DEBUG=1 --- make changes without restarting the server
