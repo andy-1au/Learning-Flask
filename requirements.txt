@@ -2,7 +2,6 @@ flask
 flask_sqlalchemy
 flask_wtf
 python-dotenv
-psycopg2-binary
 email_validator
 SQLAlchemy
 flask-bcrypt
