@@ -16,6 +16,7 @@ Just a repository for me to learn the Python Framework, Flask
 * {} is used for loops, and logical statements
 * In case, you get errors creating the db file for SQLAlchemy, run this python code below in terminal in cwd 
 * When updating bash profile, run source ~/.bash_profile to update it without having to close the terminal 
+* There are empty __init__.py files because its just there to tell python that the folder is a package
 
 
 ``` 
