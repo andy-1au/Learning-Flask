@@ -1,7 +1,7 @@
 import os 
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY') 
+    SECRET_KEY = os.environ.get('SECRET_KEY') # the secret key is used to protect against modifying cookies and cross-site request forgery attacks
     
     # POSTGRES_USER = os.environ.get("POSTGRES_USER")
     # POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
