@@ -11,3 +11,4 @@ psycopg2
 Pillow
 flask-mail
 itsdangerous==1.1.0
+markupsafe==2.0.1
