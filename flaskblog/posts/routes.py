@@ -59,12 +59,13 @@ def update_post(post_id):
 # ----------------------------------------------------------------------------
 
 # DELETE POST ROUTE ---------------------------------------------------------- 
-@posts.route("/post/<int:post_id>/delete", methods=['POST']) # only allow post requests because we don't want users to be able to go to the url and delete posts
+@posts.route("/post/<int:post_id>/delete", methods=['GET', 'POST']) # only allow post requests because we don't want users to be able to go to the url and delete posts
 @login_required
 def delete_post(post_id):
     post = Post.query.get_or_404(post_id) # if the post doesn't exist, return 404, otherwise return the post
     # first check if the author of the post is the current_user
     if post.author != current_user: 
+        # return 403 if the author of the post is not the current_user
         abort(403) # 403 is a HTTP response for a forbidden route
     db.session.delete(post)
     db.session.commit()
