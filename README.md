@@ -15,26 +15,14 @@ Just a repository for me to learn the Python Framework, Flask
 * {{}} is used when passing in variables
 * {} is used for loops, and logical statements
 * In case, you get errors creating the db file for SQLAlchemy, run this python code below in terminal in cwd 
+* When updating bash profile, run source ~/.bash_profile to update it without having to close the terminal 
+
+
 ``` 
 from [project_name] import app, db
 app.app_context().push()
 db.create_all()
 ```
-
-## Add data to db
->>> from flaskblog import db, app
->>> from flaskblog.models import MyUser, Post
->>> with app.app_context(): 
-...     db.create_all()
-...     MyUser.query.all()
-
-
-```
-from [project_name] import [tables] [tables]
-```
-* Create an instance of a table object
-* db.session.add(the_object)
-* db.session.commit()
 
 ## Querying data from db
 * [table_name].query...
