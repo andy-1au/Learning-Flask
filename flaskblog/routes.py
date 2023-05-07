@@ -10,8 +10,13 @@ from flaskblog.models import MyUser, Post
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
+# DEFAULT TO HOME ROUTE -------------------------------------------------------
+@app.route('/')
+def redirect_to_home():
+    return redirect(url_for('home'))
+# ----------------------------------------------------------------------------
+
 # HOME ROUTE -----------------------------------------------------------------
-@app.route('/') # default
 @app.route('/home') # also home, two routes are handled by the same function below
 def home(): 
     page = request.args.get('page', 1, type=int) # get the page number from the url, default to 1, and type is int
