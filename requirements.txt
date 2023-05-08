@@ -9,7 +9,7 @@ Flask-Login==0.6.2
 Flask-Mail==0.9.1
 Flask-SQLAlchemy==3.0.3
 Flask-WTF==1.1.1
-itsdangerous==1.1.0
+itsdangerous
 Jinja2==3.1.2
 MarkupSafe==2.1.2
 Pillow==9.4.0
