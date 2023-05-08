@@ -30,3 +30,6 @@ db.create_all()
 * .filter_by()
 * .all()
 * .get([by id])
+
+## IN CASE itsdangerous error occurs
+* Reference [this link](https://stackoverflow.com/questions/74039971/importerror-cannot-import-name-timedjsonwebsignatureserializer-from-itsdange)
