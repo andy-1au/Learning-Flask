@@ -3,3 +3,4 @@ instance
 .env
 config.txt
 .venv
+venv
