@@ -33,3 +33,11 @@ db.create_all()
 
 ## IN CASE itsdangerous error occurs
 * Reference [this link](https://stackoverflow.com/questions/74039971/importerror-cannot-import-name-timedjsonwebsignatureserializer-from-itsdange)
+* NOTHING TO DO WITH THE CODE, just a bug with linode where they disable mailing ports by default
+
+## Ubuntu Commands For Servers: 
+* sudo systemctl status nginx --- check status of service
+* sudo systemctl start nginx --- start service
+* sudo systemctl stop nginx --- stop service
+* sudo systemctl restart nginx --- restart service
+* sudo supervisorctl reload --- reload supervisorctl, in case of changes to code or config files 
